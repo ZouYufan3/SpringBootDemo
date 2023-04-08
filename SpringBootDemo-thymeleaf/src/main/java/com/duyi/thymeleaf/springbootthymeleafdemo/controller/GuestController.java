@@ -6,17 +6,22 @@ import com.duyi.thymeleaf.springbootthymeleafdemo.service.GuestServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.lang.reflect.Method;
 
 //业务控制类 返回视图
 @Controller
+@RequestMapping("/guest")
 public class GuestController {
 
     @Autowired
     private GuestService guestService;
 
-    @RequestMapping("/guest/list")
+//    @RequestMapping("/guest/list")
+//    @RequestMapping(method = RequestMethod.GET)   下面是简便写法
+    @GetMapping
     public String list(Model model){
 
 //        ModelAndView mv = new ModelAndView();
@@ -32,32 +37,37 @@ public class GuestController {
     }
 
 
-    @RequestMapping("/guest/toAdd")
+//    @RequestMapping("/guest/toAdd")
+    @GetMapping("/toAdd")
     public String toAdd(){
         return "add";
     }
 
-    @RequestMapping("/guest/add")
+//    @RequestMapping("/guest/add")
+    @PostMapping
     public String add(Guest guest){
         guestService.add(guest);
-        return "redirect:list";
+        return "redirect:/guest";
     }
 
-    @RequestMapping("/guest/delete")
-    public String delete(String name){
+//    @RequestMapping("/guest/delete")
+    @DeleteMapping("/{name}")
+    public String delete(@PathVariable("name") String name){
         guestService.delete(name);
-        return "redirect:list";
+        return "redirect:/guest";
     }
 
-    @RequestMapping("/guest/toupdate")
-    public String toUpdate(Model model,String name){
+//    @RequestMapping("/guest/toupdate")
+    @GetMapping("/toUpdate/{name}")
+    public String toUpdate(Model model,@PathVariable("name") String name){
         model.addAttribute("name",name);
         return "update";
     }
-    @RequestMapping("/guest/update")
+//    @RequestMapping("/guest/update")
+    @PutMapping
     public String update(Guest guest){
         guestService.update(guest);
-        return "redirect:list";
+        return "redirect:/guest";
     }
 
 
